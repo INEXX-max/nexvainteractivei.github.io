@@ -1,2 +1,2 @@
-# nexvainteractivei.github.io
+# nexvainteractive.github.io
 NEXVA INTERACTIVE
