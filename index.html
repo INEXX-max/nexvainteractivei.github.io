@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXVA INTERACTIVE - Geleceğin Oyun Deneyimi</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* Özel Stiller ve Animasyonlar */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a; /* Tam siyah */
+            color: #f3f4f6;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Ana Ekran (Hero) Arka Planı */
+        .hero-bg {
+            background: linear-gradient(180deg, rgba(10, 10, 10, 0.7) 0%, #0a0a0a 100%), 
+                        url('https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80') no-repeat center center;
+            background-size: cover;
+        }
+
+        /* Gelişmiş Düğme Stili (Siyah-Beyaz) */
+        .btn-primary {
+            background-color: #ffffff;
+            color: #0a0a0a;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: transparent;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: #ffffff;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid #52525b; /* zinc */
+        }
+        .btn-secondary:hover {
+             background-color: #27272a; /* zinc-800 */
+             border-color: #71717a; /* zinc-600 */
+        }
+
+
+        /* Kaydırmayla Gelen Animasyonlar için */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, transform;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Kartların üzerine gelince efekt (Siyah-Beyaz) */
+        .service-card {
+            background-color: #18181b; /* zinc-900 */
+            border: 1px solid #3f3f46; /* zinc-700 */
+            transition: all 0.3s ease;
+        }
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: #a1a1aa; /* zinc-400 */
+        }
+        
+        /* --- YENİ ÇOK SAYFALI YAPI STİLLERİ --- */
+        .page-section {
+            display: none; /* Tüm sayfaları varsayılan olarak gizle */
+            animation: fadeIn 0.7s ease-out; /* Sayfa geçiş animasyonu */
+        }
+        .page-section.active {
+            display: block; /* Aktif sayfayı göster */
+        }
+        
+        /* Sayfa geçişi için animasyon */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- YENİ HERO SLIDER STİLLERİ --- */
+        .hero-slide {
+            display: none;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+        .hero-slide.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Header / Navigasyon -->
+    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-black/80 backdrop-blur-md shadow-lg">
+        <nav class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Yüklenen Logo (nexva.jpg) -->
+                <a href="#home" class="page-link cursor-pointer" data-page="home">
+                    <img src="nexva.jpg" 
+                         alt="NEXVA INTERACTIVE Logo" 
+                         class="h-10 w-auto"
+                         onerror="this.onerror=null; this.src='https://placehold.co/150x40/0a0a0a/ffffff?text=NEXVA'; this.classList.remove('h-10'); this.classList.add('h-12', 'w-auto');">
+                    <!-- Not: Logo yüklenmezse, nexva.jpg dosya adının doğru olduğundan emin olun veya bir yer tutucu görünecektir. -->
+                </a>
+
+                <!-- Masaüstü Menü (Çok Sayfalı) -->
+                <div class="hidden md:flex space-x-6 lg:space-x-8 items-center">
+                    <a href="#home" class="page-link cursor-pointer text-gray-300 hover:text-white transition-colors duration-200 font-medium" data-page="home">Giriş</a>
+                    <a href="#hakkimizda" class="page-link cursor-pointer text-gray-300 hover:text-white transition-colors duration-200 font-medium" data-page="hakkimizda">Hakkımızda</a>
+                    <a href="#neler-yapiyoruz" class="page-link cursor-pointer text-gray-300 hover:text-white transition-colors duration-200 font-medium" data-page="neler-yapiyoruz">Neler Yapıyoruz</a>
+                    <a href="#misyon" class="page-link cursor-pointer text-gray-300 hover:text-white transition-colors duration-200 font-medium" data-page="misyon">Misyonumuz</a>
+                    <a href="#oyunlar" class="page-link cursor-pointer text-gray-300 hover:text-white transition-colors duration-200 font-medium" data-page="oyunlar">Oyunlar</a>
+                    <a href="#kariyer" class="page-link cursor-pointer text-gray-300 hover:text-white transition-colors duration-200 font-medium" data-page="kariyer">Kariyer</a>
+                    <a href="#iletisim" class="page-link cursor-pointer rounded-md px-4 py-2 text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-page="iletisim">İletişim</a>
+                </div>
+
+                <!-- Mobil Menü Butonu -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobil Menü (Gizli) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-900">
+            <a href="#home" class="page-link block px-4 py-3 text-base font-medium text-gray-300 hover:bg-gray-800 hover:text-white" data-page="home">Giriş</a>
+            <a href="#hakkimizda" class="page-link block px-4 py-3 text-base font-medium text-gray-300 hover:bg-gray-800 hover:text-white" data-page="hakkimizda">Hakkımızda</a>
+            <a href="#neler-yapiyoruz" class="page-link block px-4 py-3 text-base font-medium text-gray-300 hover:bg-gray-800 hover:text-white" data-page="neler-yapiyoruz">Neler Yapıyoruz</a>
+            <a href="#misyon" class="page-link block px-4 py-3 text-base font-medium text-gray-300 hover:bg-gray-800 hover:text-white" data-page="misyon">Misyonumuz</a>
+            <a href="#oyunlar" class="page-link block px-4 py-3 text-base font-medium text-gray-300 hover:bg-gray-800 hover:text-white" data-page="oyunlar">Oyunlar</a>
+            <a href="#kariyer" class="page-link block px-4 py-3 text-base font-medium text-gray-300 hover:bg-gray-800 hover:text-white" data-page="kariyer">Kariyer</a>
+            <a href="#iletisim" class="page-link block px-4 py-3 text-base font-medium text-gray-300 hover:bg-gray-800 hover:text-white" data-page="iletisim">İletişim</a>
+        </div>
+    </header>
+
+    <!-- Ana İçerik Alanı (Sayfalar burada değişecek) -->
+    <!-- Header'ın 80px (h-20) yüksekliğini telafi etmek için pt-20 -->
+    <main class="pt-20">
+
+        <!-- 1. GİRİŞ SAYFASI (Hero Slider) -->
+        <div id="home" class="page-section active">
+            <!-- -mt-20 ile header'ın altındaki boşluğu alır ve tam ekran yapar -->
+            <section class="h-screen -mt-20 min-h-[700px] flex items-center justify-center text-center hero-bg relative px-4">
+                <div class="z-10 relative overflow-hidden h-64 w-full max-w-4xl">
+                    
+                    <!-- Slide 1 -->
+                    <div class="hero-slide active">
+                        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight mb-6">
+                            GELECEĞİN OYUN
+                            <br>
+                            <span class="text-gray-300">DENEYİMİNİ ŞEKİLLENDİRİYORUZ</span>
+                        </h1>
+                        <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
+                            Yenilikçi teknolojiler ve sınırsız hayal gücüyle, unutulmaz dijital dünyalar yaratıyoruz.
+                        </p>
+                    </div>
+                    
+                    <!-- Slide 2 -->
+                    <div class="hero-slide">
+                        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight mb-6">
+                            YENİLİKÇİ
+                            <br>
+                            <span class="text-gray-300">TEKNOLOJİLER</span>
+                        </h1>
+                        <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
+                            Yapay zeka, VR ve AR ile oyunun sınırlarını yeniden çiziyoruz.
+                        </p>
+                    </div>
+
+                    <!-- Slide 3 -->
+                    <div class="hero-slide">
+                        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight mb-6">
+                            SINIRSIZ
+                            <br>
+                            <span class="text-gray-300">HAYAL GÜCÜ</span>
+                        </h1>
+                        <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
+                            Tutkulu ekibimizle, hikayesi olan oyunlar yaratıyoruz.
+                        </p>
+                    </div>
+
+                </div>
+                 <!-- Kaydırmayı teşvik eden ok -->
+                 <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20">
+                    <svg class="w-8 h-8 text-gray-400 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </div>
+            </section>
+        </div>
+
+        <!-- 2. HAKKIMIZDA SAYFASI -->
+        <div id="hakkimizda" class="page-section">
+            <section class="py-20 lg:py-32 bg-black">
+                <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+                        <!-- Resim Bölümü -->
+                        <div class="w-full lg:w-1/2 reveal">
+                            <img src="https://images.unsplash.com/photo-1558981000-f294a0034a7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" 
+                                 alt="Ekip Çalışması" 
+                                 class="rounded-lg shadow-2xl object-cover w-full h-80 lg:h-96 brightness-90">
+                        </div>
+                        <!-- Metin Bölümü -->
+                        <div class="w-full lg:w-1/2 reveal" style="transition-delay: 200ms;">
+                            <h2 class="text-3xl lg:text-4xl font-extrabold text-white mb-6">Biz Kimiz?</h2>
+                            <p class="text-lg text-gray-300 mb-4">
+                                NEXVA INTERACTIVE, 2024 yılında oyun dünyasına yeni bir soluk getirmek amacıyla kurulmuş bağımsız bir oyun geliştirme stüdyosudur.
+                            </p>
+                            <p class="text-lg text-gray-300 mb-4">
+                                Bizler; sanatçılar, mühendisler ve hikaye anlatıcılarından oluşan tutkulu bir ekibiz. Tek bir amacımız var: Sadece oynanan değil, aynı zamanda "deneyimlenen" oyunlar yaratmak.
+                            </p>
+                             <a href="#neler-yapiyoruz" data-page="neler-yapiyoruz" class="page-link btn-secondary text-white font-medium py-3 px-6 rounded-lg">
+                                Neler Yaptığımızı Gör
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- 3. NELER YAPIYORUZ SAYFASI -->
+        <div id="neler-yapiyoruz" class="page-section">
+            <section class="py-20 lg:py-32 bg-gray-900">
+                <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16 reveal">
+                        <h2 class="text-3xl lg:text-4xl font-extrabold text-white mb-4">Neler Yapıyoruz?</h2>
+                        <p class="text-lg text-gray-400 max-w-2xl mx-auto">
+                            Sınırları zorlayan teknolojilerle, oyun dünyasına yeni bir soluk getiriyoruz.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Kart 1: Oyun Geliştirme -->
+                        <div class="service-card p-8 rounded-lg shadow-xl reveal">
+                            <h3 class="text-2xl font-bold text-white mb-3">Oyun Geliştirme</h3>
+                            <p class="text-gray-300">
+                                PC, konsol ve mobil platformlar için yüksek kaliteli, sürükleyici A++ oyunlar tasarlıyor ve geliştiriyoruz.
+                            </p>
+                        </div>
+                        <!-- Kart 2: Yapay Zeka -->
+                        <div class="service-card p-8 rounded-lg shadow-xl reveal" style="transition-delay: 200ms;">
+                            <h3 class="text-2xl font-bold text-white mb-3">Yapay Zeka Entegrasyonu</h3>
+                            <p class="text-gray-300">
+                                Daha akıllı düşmanlar, dinamik hikaye anlatımı ve gerçekçi NPC'ler için en son yapay zeka modellerini kullanıyoruz.
+                            </p>
+                        </div>
+                        <!-- Kart 3: VR/AR -->
+                        <div class="service-card p-8 rounded-lg shadow-xl reveal" style="transition-delay: 400ms;">
+                            <h3 class="text-2xl font-bold text-white mb-3">VR/AR Deneyimleri</h3>
+                            <p class="text-gray-300">
+                                Oyuncuları tamamen içine çeken, gerçeklik ile sanal dünyayı birleştiren yeni nesil VR ve AR projeleri üretiyoruz.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <!-- 4. MİSYONUMUZ SAYFASI -->
+        <div id="misyon" class="page-section">
+            <section class="py-20 lg:py-32 bg-black">
+                <div class="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center reveal">
+                    <h2 class="text-3xl lg:text-4xl font-extrabold text-white mb-6">Misyonumuz & Vizyonumuz</h2>
+                    <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+                        <span class="font-bold text-white">Misyonumuz:</span> Yenilikçi teknolojileri ve yaratıcı hikaye anlatımını birleştirerek, dünya genelindeki oyunculara eşsiz ve sürükleyici deneyimler sunmaktır.
+                    </p>
+                    <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                       <span class="font-bold text-white">Vizyonumuz:</span> Dijital eğlence sektöründe öncü bir güç olmak ve oyunları sanatın, bilimin ve topluluğun buluştuğu bir platforma dönüştürmektir.
+                    </p>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- 5. OYUNLARIMIZ SAYFASI -->
+        <div id="oyunlar" class="page-section">
+            <section class="py-20 lg:py-32 bg-gray-900">
+                <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16 reveal">
+                        <h2 class="text-3xl lg:text-4xl font-extrabold text-white mb-4">Oyunlarımız</h2>
+                        <p class="text-lg text-gray-400 max-w-2xl mx-auto">
+                            Üzerinde çalıştığımız ve yakında çıkacak olan projelerimize göz atın.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Oyun Kartı 1 -->
+                        <div class="bg-gray-800 rounded-lg overflow-hidden shadow-xl transform transition-transform duration-300 hover:scale-105 reveal">
+                            <img src="https://placehold.co/600x400/111111/FFFFFF?text=Project+Titan" alt="Oyun 1" class="w-full h-56 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-2xl font-bold text-white mb-2">Project: TITAN</h3>
+                                <p class="text-gray-300 mb-4">Açık dünya, bilim kurgu RPG'si. Evrenin sırlarını keşfedin.</p>
+                                <span class="text-sm font-medium text-gray-300 bg-gray-700/50 px-3 py-1 rounded-full">Geliştiriliyor</span>
+                            </div>
+                        </div>
+                        <!-- Oyun Kartı 2 -->
+                        <div class="bg-gray-800 rounded-lg overflow-hidden shadow-xl transform transition-transform duration-300 hover:scale-105 reveal" style="transition-delay: 200ms;">
+                            <img src="https://placehold.co/600x400/222222/FFFFFF?text=Cyber+Echo" alt="Oyun 2" class="w-full h-56 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-2xl font-bold text-white mb-2">Cyber Echo</h3>
+                                <p class="text-gray-300 mb-4">Hızlı tempolu, siberpunk birinci şahıs nişancı oyunu.</p>
+                                <span class="text-sm font-medium text-gray-300 bg-gray-700/50 px-3 py-1 rounded-full">Geliştiriliyor</span>
+                            </div>
+                        </div>
+                        <!-- Oyun Kartı 3 -->
+                        <div class="bg-gray-800 rounded-lg overflow-hidden shadow-xl transform transition-transform duration-300 hover:scale-105 reveal" style="transition-delay: 400ms;">
+                            <img src="https://placehold.co/600x400/333333/FFFFFF?text=Nexus+Void" alt="Oyun 3" class="w-full h-56 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-2xl font-bold text-white mb-2">Nexus Void</h3>
+                                <p class="text-gray-300 mb-4">Gizem ve korku elementleri içeren psikolojik bir macera.</p>
+                                <span class="text-sm font-medium text-gray-400 bg-gray-600/50 px-3 py-1 rounded-full">Duyurulacak</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- 6. KARİYER SAYFASI -->
+        <div id="kariyer" class="page-section">
+            <section class="py-20 lg:py-32 bg-black text-center">
+                <div class="container mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 reveal">
+                    <h2 class="text-3xl lg:text-4xl font-extrabold text-white mb-6">Ekibimize Katılın</h2>
+                    <p class="text-lg md:text-xl text-gray-300 mb-10">
+                        Yaratıcı, tutkulu ve oyun dünyasını değiştirmek isteyen yetenekler arıyoruz. 
+                        Geleceği bizimle birlikte inşa etmek ister misiniz?
+                    </p>
+                    <a href="#" class="btn-primary py-3 px-8 rounded-full">
+                        Açık Pozisyonlar
+                    </a>
+                </div>
+            </section>
+        </div>
+        
+        <!-- 7. İLETİŞİM SAYFASI -->
+        <div id="iletisim" class="page-section">
+            <section class="py-20 lg:py-32 bg-gray-900">
+                <div class="container mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 reveal">
+                    <div class="text-center mb-12">
+                         <h2 class="text-3xl lg:text-4xl font-extrabold text-white mb-4">Bize Ulaşın</h2>
+                         <p class="text-lg text-gray-400">Bir sorunuz mu var veya bizimle çalışmak mı istiyorsunuz? İletişime geçin.</p>
+                    </div>
+                    <form action="#" method="POST" class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-300">Adınız</label>
+                            <input type="text" name="name" id="name" required class="mt-1 block w-full px-4 py-3 rounded-md bg-gray-800 border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-gray-500">
+                        </div>
+                         <div>
+                            <label for="email" class="block text-sm font-medium text-gray-300">Email Adresiniz</label>
+                            <input type="email" name="email" id="email" required class="mt-1 block w-full px-4 py-3 rounded-md bg-gray-800 border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-gray-500">
+                        </div>
+                         <div>
+                            <label for="message" class="block text-sm font-medium text-gray-300">Mesajınız</label>
+                            <textarea id="message" name="message" rows="4" required class="mt-1 block w-full px-4 py-3 rounded-md bg-gray-800 border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-gray-500"></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn-primary py-3 px-10 rounded-full">
+                                Gönder
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Gelişmiş Footer (Her sayfada görünür) -->
+    <footer class="bg-black text-gray-400 py-16 lg:py-20 border-t border-gray-800">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                
+                <!-- 1. Sütun: Logo ve Sosyal Medya -->
+                <div class="space-y-4">
+                     <a href="#home" class="page-link cursor-pointer" data-page="home">
+                        <img src="nexva.jpg" 
+                             alt="NEXVA INTERACTIVE Logo" 
+                             class="h-10 w-auto opacity-80"
+                             onerror="this.onerror=null; this.src='https://placehold.co/150x40/0a0a0a/ffffff?text=NEXVA'; this.classList.remove('h-10'); this.classList.add('h-12', 'w-auto');">
+                    </a>
+                    <p class="text-sm max-w-xs">
+                        Dijital dünyalara hayat veren lider oyun stüdyosu.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="hover:text-white transition-colors">Twitter (X)</a>
+                        <a href="#" class="hover:text-white transition-colors">LinkedIn</a>
+                        <a href="#" class="hover:text-white transition-colors">Discord</a>
+                        <a href="#" class="hover:text-white transition-colors">YouTube</a>
+                    </div>
+                </div>
+
+                <!-- 2. Sütun: Site Haritası -->
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Site Haritası</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#hakkimizda" class="page-link cursor-pointer hover:text-white transition-colors" data-page="hakkimizda">Hakkımızda</a></li>
+                        <li><a href="#neler-yapiyoruz" class="page-link cursor-pointer hover:text-white transition-colors" data-page="neler-yapiyoruz">Neler Yapıyoruz</a></li>
+                        <li><a href="#oyunlar" class="page-link cursor-pointer hover:text-white transition-colors" data-page="oyunlar">Oyunlar</a></li>
+                        <li><a href="#kariyer" class="page-link cursor-pointer hover:text-white transition-colors" data-page="kariyer">Kariyer</a></li>
+                        <li><a href="#iletisim" class="page-link cursor-pointer hover:text-white transition-colors" data-page="iletisim">İletişim</a></li>
+                    </ul>
+                </div>
+
+                <!-- 3. Sütun: Yasal -->
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Yasal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white transition-colors">Gizlilik Politikası</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Kullanım Koşulları</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Çerez Politikası</a></li>
+                    </ul>
+                </div>
+
+                <!-- 4. Sütun: İletişim -->
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Bize Ulaşın</h4>
+                    <ul class="space-y-2">
+                        <li><p>İstanbul, Türkiye</p></li>
+                        <li><a href="mailto:info@nexva.com" class="hover:text-white transition-colors">info@nexva.com</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Alt Footer -->
+            <div class="mt-12 pt-8 border-t border-gray-800 text-center text-sm">
+                <p>&copy; <span id="current-year"></span> NEXVA INTERACTIVE. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Yılı otomatik güncelle
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // --- YENİ ÇOK SAYFALI YAPI SCRIPTI ---
+            const pageLinks = document.querySelectorAll('.page-link');
+            const pages = document.querySelectorAll('.page-section');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            function showPage(pageId) {
+                // Tüm sayfaları gizle
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+
+                // İstenen sayfayı göster
+                const targetPage = document.getElementById(pageId);
+                if (targetPage) {
+                    targetPage.classList.add('active');
+                } else {
+                    // Sayfa bulunamazsa ana sayfayı göster
+                    document.getElementById('home').classList.add('active');
+                }
+                
+                // Sayfa değiştirince en üste kaydır
+                window.scrollTo(0, 0);
+
+                // Mobil menüyü kapat
+                mobileMenu.classList.add('hidden');
+            }
+
+            // Tüm sayfa linklerine tıklama olayı ekle
+            pageLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault(); // Varsayılan # link davranışını engelle
+                    const pageId = link.getAttribute('data-page');
+                    showPage(pageId);
+                });
+            });
+
+            // --- YENİ HERO SLIDER SCRIPTI ---
+            const slides = document.querySelectorAll('.hero-slide');
+            let currentSlide = 0;
+            const slideInterval = 4000; // 4 saniye
+
+            function nextSlide() {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+
+            if (slides.length > 0) {
+                setInterval(nextSlide, slideInterval);
+            }
+
+            // --- ESKİ SCRIPTLER ---
+
+            // Mobil Menü Tıklama Olayı
+            const menuButton = document.getElementById('mobile-menu-button');
+            menuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Kaydırma Animasyonları (Intersection Observer)
+            // Not: Bu animasyonlar artık her sayfa içinde ayrı ayrı çalışacak.
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); // Animasyon bir kez çalışsın
+                    }
+                });
+            }, {
+                threshold: 0.1 // Elementin %10'u görününce
+            });
+
+            revealElements.forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Sayfalar arası geçişte animasyonları tekrar tetiklemek için
+            // (Şimdilik basit tutuyoruz, her sayfa yüklendiğinde tetikleniyor)
+        });
+    </script>
+</body>
+</html>
